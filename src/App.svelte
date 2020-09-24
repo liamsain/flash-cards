@@ -40,6 +40,8 @@
     let collections = getCollectionsFromStore();
     collections = collections.filter((x) => x.id !== collection.id);
     saveCardCollectionsToStore(collections);
+    cardCollections = collections;
+    activeCollection = null;
   }
 
   function onAddCard() {
@@ -72,6 +74,11 @@
     addingCollection = false;
     collectionName = "";
   }
+
+  function onCancelAddCollection() {
+    collectionName = '';
+    addingCollection = false;
+  }
 </script>
 
 <style>
@@ -103,14 +110,20 @@
     {#if addingCollection}
       <input bind:value={collectionName} placeholder="Name of collection" />
       <button on:click={onAddCollection}>Save</button>
+      <button on:click={onCancelAddCollection}>Cancel</button>
     {/if}
   </div>
   <div>
     {#if activeCollection}
+    <div style="display: flex;justify-content: space-between">
       <div style="display: flex;">
         <button on:click={onAddCard}>Add card</button>
         <h2 style="margin-left: 40px;">{activeCollection.name}</h2>
       </div>
+      <div>
+        <button on:click={() => removeCollectionFromStore(activeCollection)}>Delete collection</button>
+      </div>
+    </div>
       <div class="flip-card-container">
         {#each activeCollection.cards as value}
           <FlipCard

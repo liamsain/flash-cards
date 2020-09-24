@@ -1,5 +1,5 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -9,10 +9,14 @@
 
   function onUpdate() {
     editMode = false;
-    dispatch('update', value);
+    dispatch("update", value);
   }
   function onRemove() {
-    dispatch('remove', value);
+    dispatch("remove", value);
+  }
+  function onCardClick() {
+    flipped = !flipped;
+    editMode = false;
   }
 </script>
 
@@ -71,37 +75,43 @@
 
 <div
   class="flip-card"
-  on:click={() => (flipped = !flipped)}
+  on:click={() => onCardClick()}
   class:rotate={flipped}>
   <div class="flip-card-inner">
     <div class="flip-card-front">
       <div class="flip-card-content" style="padding: 20px;">
         {#if editMode}
           <textarea bind:value={value.question} on:click|stopPropagation />
-          <button
-            on:click|stopPropagation={() => onUpdate()}>Save</button>
+          <button on:click|stopPropagation={() => onUpdate()}>Save</button>
         {/if}
         {#if !editMode}
           <p>{value.question}</p>
-          <button
-            on:click|stopPropagation={() => (editMode = true)}>Edit</button>
+          <div>
+            <button
+              on:click|stopPropagation={() => (editMode = true)}>Edit</button>
+
+            <button on:click|stopPropagation={() => onRemove()}>Delete</button>
+          </div>
         {/if}
-        <button on:click|stopPropagation={() => onRemove()}>Delete</button>
       </div>
     </div>
     <div class="flip-card-back">
       <div class="flip-card-content" style="padding: 20px;">
         {#if editMode}
           <textarea bind:value={value.answer} on:click|stopPropagation />
-          <button
-            on:click|stopPropagation={() => onUpdate()}>Save</button>
+          <div>
+            <button on:click|stopPropagation={() => onUpdate()}>Save</button>
+          </div>
         {/if}
         {#if !editMode}
           <p>{value.answer}</p>
-          <button
-            on:click|stopPropagation={() => (editMode = true)}>Edit</button>
+          <div>
+            <button
+              on:click|stopPropagation={() => (editMode = true)}>Edit</button>
+
+            <button on:click|stopPropagation={() => onRemove()}>Delete</button>
+          </div>
         {/if}
-        <button on:click|stopPropagation={() => onRemove()}>Delete</button>
       </div>
     </div>
   </div>
